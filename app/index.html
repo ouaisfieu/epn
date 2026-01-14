@@ -1,0 +1,838 @@
+
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCPLC — Appel d'Offre Citoyen | Fork Belgium</title>
+  <meta name="description" content="Un appel d'offre citoyen pour forker le modèle de société belge. L'éducation populaire hacke le système.">
+  <style>
+:root{--bg:#0d0d14;--bg2:#1a1a2e;--bg3:#16213e;--card:rgba(26,26,46,0.9);--tx:#f0f0f0;--tx2:#a0a0b0;--tx3:#707080;--a1:#98D8AA;--a2:#C3ACD0;--a3:#7B68EE;--glow1:rgba(152,216,170,0.4);--glow2:rgba(195,172,208,0.4);--brd:rgba(255,255,255,0.1);--glass:rgba(255,255,255,0.05)}
+[data-theme="light"]{--bg:#f8f9fa;--bg2:#e9ecef;--bg3:#dee2e6;--card:rgba(255,255,255,0.95);--tx:#1a1a2e;--tx2:#495057;--tx3:#6c757d;--brd:rgba(0,0,0,0.1);--glass:rgba(0,0,0,0.03)}
+[data-theme="neon"]{--bg:#0a0a0f;--bg2:#0f0f18;--bg3:#141420;--a1:#0ff;--a2:#f0f;--a3:#ff0;--glow1:rgba(0,255,255,0.5);--glow2:rgba(255,0,255,0.5)}
+[data-theme="console"]{--bg:#0c0c0c;--bg2:#111;--bg3:#1a1a1a;--tx:#33ff33;--tx2:#20cc20;--tx3:#109010;--a1:#33ff33;--a2:#33ff33;--a3:#33ff33;--glow1:rgba(51,255,51,0.4);--glow2:rgba(51,255,51,0.2)}
+[data-theme="eighties"]{--bg:#1a0a2e;--bg2:#2d1b4e;--bg3:#3d2b5e;--a1:#ff6ec7;--a2:#00d4ff;--a3:#ffcc00;--glow1:rgba(255,110,199,0.5);--glow2:rgba(0,212,255,0.5)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--tx);line-height:1.7;overflow-x:hidden}
+[data-theme="console"] body{font-family:'Courier New',Consolas,monospace}
+a{color:var(--a1);text-decoration:none;transition:all 0.3s}
+a:hover{color:var(--a2)}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--a1),var(--a2));z-index:10001;transition:width 0.1s}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;padding:0.7rem 1.5rem;display:flex;justify-content:space-between;align-items:center;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd);z-index:1000}
+[data-theme="light"] nav{background:rgba(248,249,250,0.92)}
+.logo{font-weight:800;font-size:1.4rem;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center}
+.nav-links a{color:var(--tx2);font-size:0.8rem;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:var(--a1);transition:width 0.3s}
+.nav-links a:hover{color:var(--a1)}
+.nav-links a:hover::after{width:100%}
+.themes{display:flex;gap:0.25rem;background:var(--bg2);padding:0.2rem;border-radius:2rem;border:1px solid var(--brd)}
+.themes button{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;font-size:11px;transition:all 0.3s;display:flex;align-items:center;justify-content:center}
+.themes button:hover{transform:scale(1.15)}
+.themes button.on{border-color:var(--a1);box-shadow:0 0 10px var(--glow1)}
+@media(max-width:900px){.nav-links{display:none}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:6rem 1.5rem 4rem;text-align:center;position:relative;z-index:1;background:radial-gradient(ellipse at top,var(--bg2),var(--bg))}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:0.03;pointer-events:none}
+.badge{display:inline-block;padding:0.5rem 1.2rem;background:var(--glass);border:1px solid var(--brd);border-radius:2rem;font-size:0.85rem;color:var(--a1);margin-bottom:1.5rem;backdrop-filter:blur(10px);animation:pulse-badge 2s ease-in-out infinite}
+@keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 var(--glow1)}50%{box-shadow:0 0 20px 5px var(--glow1)}}
+.hero h1{font-size:clamp(2.2rem,8vw,4.5rem);font-weight:800;margin-bottom:1rem;line-height:1.1}
+.hero h1 .glitch{position:relative;display:inline-block}
+.hero h1 .glitch::before,.hero h1 .glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;opacity:0}
+.hero h1 .glitch:hover::before{animation:glitch1 0.3s infinite;color:var(--a1);opacity:0.8;z-index:-1}
+.hero h1 .glitch:hover::after{animation:glitch2 0.3s infinite;color:var(--a2);opacity:0.8;z-index:-2}
+@keyframes glitch1{0%{clip-path:inset(40% 0 61% 0);transform:translate(-3px,-3px)}20%{clip-path:inset(92% 0 1% 0);transform:translate(3px,1px)}40%{clip-path:inset(43% 0 1% 0);transform:translate(-1px,3px)}60%{clip-path:inset(25% 0 58% 0);transform:translate(3px,-3px)}80%{clip-path:inset(54% 0 7% 0);transform:translate(-3px,1px)}100%{clip-path:inset(58% 0 43% 0);transform:translate(1px,-1px)}}
+@keyframes glitch2{0%{clip-path:inset(65% 0 14% 0);transform:translate(3px,3px)}20%{clip-path:inset(10% 0 85% 0);transform:translate(-3px,-1px)}40%{clip-path:inset(1% 0 40% 0);transform:translate(1px,-3px)}60%{clip-path:inset(75% 0 9% 0);transform:translate(-3px,3px)}80%{clip-path:inset(21% 0 50% 0);transform:translate(3px,-1px)}100%{clip-path:inset(10% 0 70% 0);transform:translate(-1px,1px)}}
+.hero h1 .gr{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a3),var(--a1));background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradient-shift 6s ease infinite}
+@keyframes gradient-shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero>p{font-size:1.15rem;color:var(--tx2);max-width:750px;margin:0 auto 2.5rem}
+.countdown{display:flex;gap:1rem;justify-content:center;margin-bottom:2.5rem;flex-wrap:wrap}
+.countdown>div{background:var(--card);border:1px solid var(--brd);border-radius:1rem;padding:1.2rem 1rem;min-width:80px;backdrop-filter:blur(10px);transition:all 0.3s}
+.countdown>div:hover{transform:scale(1.08);border-color:var(--a1);box-shadow:0 0 25px var(--glow1)}
+.countdown .n{font-size:2.2rem;font-weight:700;color:var(--a1);font-family:'Courier New',monospace;display:block}
+.countdown .l{font-size:0.7rem;color:var(--tx2);text-transform:uppercase;letter-spacing:1px}
+.ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn{padding:0.9rem 1.8rem;border-radius:0.6rem;font-weight:600;border:none;cursor:pointer;font-size:0.95rem;transition:all 0.3s;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,0.2);border-radius:50%;transform:translate(-50%,-50%);transition:width 0.5s,height 0.5s}
+.btn:hover::after{width:300px;height:300px}
+.btn:hover{transform:translateY(-3px)}
+.btn-p{background:linear-gradient(135deg,var(--a1),var(--a2));color:#0d0d14;box-shadow:0 4px 20px var(--glow1)}
+.btn-p:hover{box-shadow:0 8px 35px var(--glow1)}
+.btn-s{background:transparent;color:var(--tx);border:2px solid var(--brd)}
+.btn-s:hover{border-color:var(--a1);color:var(--a1)}
+
+/* SECTIONS */
+section{padding:5rem 0;position:relative;z-index:1;border-top:1px solid var(--brd)}
+section:nth-child(even){background:var(--bg2)}
+h2{font-size:2rem;margin-bottom:0.5rem}
+h2 .gr{background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+h3{font-size:1.25rem;color:var(--a1);margin:2.5rem 0 1rem;padding-left:1rem;border-left:3px solid var(--a1)}
+h4{font-size:1.05rem;color:var(--a2);margin:1.5rem 0 0.8rem}
+.sub{color:var(--tx2);margin-bottom:2.5rem;font-size:1.05rem}
+p{margin-bottom:1rem}
+strong{color:var(--a1)}
+em{color:var(--a2)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1)}
+.reveal.active{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-50px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1)}
+.reveal-left.active{opacity:1;transform:translateX(0)}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--brd);border-radius:1rem;padding:1.5rem;margin-bottom:1.5rem;backdrop-filter:blur(10px);transition:all 0.4s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(152,216,170,0.08),transparent);transition:left 0.6s}
+.card:hover::before{left:100%}
+.card:hover{transform:translateY(-5px);border-color:var(--a1);box-shadow:0 15px 40px rgba(152,216,170,0.12)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem}
+.card-header h4{margin:0;color:var(--tx)}
+.tag{font-size:0.7rem;padding:0.25rem 0.7rem;background:var(--a1);color:#0d0d14;border-radius:1rem;font-weight:600}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin:2.5rem 0}
+.stat{background:var(--card);border:1px solid var(--brd);border-radius:1rem;padding:1.8rem;text-align:center;backdrop-filter:blur(10px);transition:all 0.4s}
+.stat:hover{transform:translateY(-5px);border-color:var(--a1);box-shadow:0 15px 40px rgba(152,216,170,0.1)}
+.stat .n{font-size:2.5rem;font-weight:700;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+.stat .l{color:var(--tx2);font-size:0.85rem;margin-top:0.3rem}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+th,td{padding:0.9rem 1rem;text-align:left;border-bottom:1px solid var(--brd)}
+th{background:var(--bg2);color:var(--a1);font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px}
+tr{transition:all 0.3s}
+tr:hover{background:rgba(152,216,170,0.05)}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:2.5rem;margin:2.5rem 0}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--a1),var(--a2),var(--a3))}
+.timeline-item{position:relative;margin-bottom:2.5rem;padding-left:1.5rem}
+.timeline-item::before{content:'';position:absolute;left:-2.5rem;top:0.4rem;width:14px;height:14px;background:var(--a1);border-radius:50%;border:3px solid var(--bg);transition:all 0.3s;box-shadow:0 0 10px var(--glow1)}
+.timeline-item:hover::before{transform:scale(1.4);box-shadow:0 0 20px var(--glow1)}
+.timeline-item h4{margin-top:0;color:var(--a1)}
+
+/* ACCORDION */
+details{background:var(--card);border:1px solid var(--brd);border-radius:0.8rem;margin-bottom:0.8rem;transition:all 0.3s}
+details[open]{background:rgba(152,216,170,0.03);border-color:var(--a1)}
+summary{padding:1.2rem 1.5rem;cursor:pointer;font-weight:600;color:var(--a1);list-style:none;transition:all 0.3s}
+summary::-webkit-details-marker{display:none}
+summary::before{content:'▸ '}
+details[open] summary::before{content:'▾ '}
+summary:hover{padding-left:2rem;color:var(--a2)}
+details>div{padding:0 1.5rem 1.5rem;animation:accordion-open 0.4s ease}
+@keyframes accordion-open{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* GRIDS */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+
+/* QUOTE */
+blockquote{border-left:4px solid var(--a2);padding:1.2rem 1.8rem;margin:2rem 0;background:var(--card);border-radius:0 0.8rem 0.8rem 0;font-style:italic;color:var(--tx2);position:relative}
+blockquote::before{content:'"';position:absolute;top:-10px;left:15px;font-size:4rem;color:var(--a1);opacity:0.2;font-family:Georgia,serif}
+blockquote strong{color:var(--a1)}
+
+/* LISTS */
+ul,ol{margin:1rem 0 1rem 1.5rem}
+li{margin-bottom:0.6rem}
+li::marker{color:var(--a1)}
+
+/* FOOTER */
+footer{padding:3rem 1.5rem;text-align:center;border-top:1px solid var(--brd);color:var(--tx2);font-size:0.85rem;position:relative;z-index:1}
+footer a{color:var(--a1)}
+
+/* CONSOLE SCANLINES */
+[data-theme="console"] body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px);pointer-events:none;z-index:9999}
+[data-theme="console"] h1,[data-theme="console"] h2,[data-theme="console"] h3{text-shadow:0 0 10px var(--a1),0 0 20px var(--a1)}
+
+/* 80s GRID */
+[data-theme="eighties"] .hero::after{content:'';position:absolute;bottom:0;left:-50%;right:-50%;height:40%;background:linear-gradient(90deg,var(--a2) 1px,transparent 1px) 0 0/50px 50px,linear-gradient(var(--a2) 1px,transparent 1px) 0 0/50px 50px;transform:perspective(500px) rotateX(70deg);transform-origin:bottom;opacity:0.2;animation:grid-move 15s linear infinite}
+@keyframes grid-move{from{background-position:0 0,0 0}to{background-position:50px 50px,50px 50px}}
+
+/* NEON */
+[data-theme="neon"] .card{box-shadow:0 0 5px var(--a1),inset 0 0 5px rgba(0,255,255,0.05)}
+[data-theme="neon"] .card:hover{box-shadow:0 0 20px var(--a1),0 0 40px var(--a2)}
+[data-theme="neon"] .btn-p{animation:neon-pulse 2s ease-in-out infinite}
+@keyframes neon-pulse{0%,100%{box-shadow:0 0 10px var(--a1),0 0 20px var(--a2)}50%{box-shadow:0 0 25px var(--a1),0 0 50px var(--a2)}}
+
+/* PRINT */
+@media print{nav,.themes,.ctas,.countdown,#particles,.scroll-progress{display:none}body{background:#fff;color:#000}section{break-inside:avoid;page-break-inside:avoid}}
+  </style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav>
+  <div class="logo">CCPLC</div>
+  <div class="nav-links">
+    <a href="#diagnostic">Diagnostic</a>
+    <a href="#ecp">ECP</a>
+    <a href="#mcc">MCC</a>
+    <a href="#piliers">Piliers</a>
+    <a href="#veille">Veille</a>
+    <a href="#lieux">Lieux de liens</a>
+    <a href="#edperm">Éducation</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#raid">Raid</a>
+  </div>
+  <div class="themes">
+    <button class="on" onclick="setTheme('dark')" title="Sombre">🌙</button>
+    <button onclick="setTheme('light')" title="Clair">☀️</button>
+    <button onclick="setTheme('neon')" title="Néon">💜</button>
+    <button onclick="setTheme('console')" title="Console">⌨️</button>
+    <button onclick="setTheme('eighties')" title="80's">📼</button>
+  </div>
+</nav>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero">
+  <span class="badge">⚡ Opération Fork Belgium — Raid international le 22 janvier 2026</span>
+  <h1>
+    <span class="glitch" data-text="Fork">Fork</span> 
+    <span class="gr">Belgium</span>
+  </h1>
+  <p>Un million de personnes piégées. Plus de 15 milliards gaspillés chaque année. Les piliers belges en compétition ouverte avec une alternative systémique. L'éducation populaire hacke le système en le retournant contre lui-même.</p>
+  
+  <div class="countdown" id="countdown">
+    <div><span class="n" id="cd-d">--</span><span class="l">Jours</span></div>
+    <div><span class="n" id="cd-h">--</span><span class="l">Heures</span></div>
+    <div><span class="n" id="cd-m">--</span><span class="l">Minutes</span></div>
+    <div><span class="n" id="cd-s">--</span><span class="l">Secondes</span></div>
+  </div>
+  
+  <div class="ctas">
+    <a href="https://github.com/ouaisfieu/ccplc" target="_blank" class="btn btn-p">⭐ Star GitHub = 1 voix</a>
+    <a href="#diagnostic" class="btn btn-s">Lire le dossier complet ↓</a>
+  </div>
+</section>
+
+<!-- ══════════════════ DIAGNOSTIC ══════════════════ -->
+<section id="diagnostic">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">Le Diagnostic</span></h2>
+    <p class="sub reveal">Le paradoxe d'un gisement humain inexploité et d'un fardeau budgétaire insoutenable</p>
+    
+    <div class="reveal">
+      <p>Le récit de "L'Échappée Belle de la Famille Bureau" est devenu l'allégorie de notre époque : une aspiration profonde à une meilleure qualité de vie. Mais cette transformation ne doit pas occulter une réalité brutale : celle de <strong>près d'un million de personnes laissées sur le quai</strong>, piégées par un système qui non seulement les exclut, mais qui est activement conçu pour perpétuer leur inactivité.</p>
+    </div>
+    
+    <blockquote class="reveal">Le système actuel n'est pas simplement inefficace ; il est devenu une <strong>subvention massive à l'exclusion sociale</strong>, une dépense de plus de 15 milliards d'euros par an qui ne résout aucune crise mais les finance.</blockquote>
+
+    <h3 class="reveal">Le piège institutionnel actuel</h3>
+    <ul class="reveal">
+      <li>Les personnes bénéficiant d'allocations sont indemnisées pour leur <strong>inactivité</strong></li>
+      <li>Elles sont <strong>pénalisées financièrement</strong> (perte d'allocations, de statut, de droits connexes) dès qu'elles entreprennent une activité, même modeste</li>
+      <li>Ce système décourage la contribution et le maintien des compétences, créant une dépendance coûteuse pour la collectivité et une perte de sens pour l'individu</li>
+    </ul>
+
+    <h3 class="reveal">La réalité chiffrée de l'exclusion (données 2024-2025)</h3>
+    <div class="reveal">
+      <table>
+        <tr><th>Catégorie</th><th>Nombre</th><th>Source</th></tr>
+        <tr><td>Personnes en invalidité (>1 an)</td><td><strong>526 507</strong></td><td>INAMI 2023</td></tr>
+        <tr><td>Chômeurs complets indemnisés</td><td><strong>283 653</strong></td><td>ONEM oct. 2025</td></tr>
+        <tr><td>Bénéficiaires du RIS</td><td><strong>165 620</strong></td><td>SPP Intégration Sociale 2024</td></tr>
+        <tr><td><strong>TOTAL POPULATIONS CIBLÉES</strong></td><td><strong>~975 000</strong></td><td></td></tr>
+      </table>
+    </div>
+    
+    <p class="reveal">La répartition par cause révèle une prédominance des <strong>troubles mentaux</strong> : 36,9% des cas (contre 28,8% en 2005). Le burnout et la dépression représentent à eux seuls <strong>137 454 personnes</strong> (26% du total) pour un coût dépassant <strong>2 milliards d'euros</strong>.</p>
+
+    <h3 class="reveal">Le coût annuel pour les finances publiques</h3>
+    <div class="stats reveal">
+      <div class="stat"><div class="n">>9 Mrd€</div><div class="l">Incapacité de travail (INAMI)</div></div>
+      <div class="stat"><div class="n">~6,5 Mrd€</div><div class="l">Allocations chômage (ONEM)</div></div>
+      <div class="stat"><div class="n">>1 Mrd€</div><div class="l">RIS et aides CPAS</div></div>
+      <div class="stat"><div class="n">>15,5 Mrd€</div><div class="l">COÛT TOTAL MINIMUM</div></div>
+    </div>
+    
+    <p class="reveal">La protection sociale globale belge représentait <strong>174,2 milliards d'euros</strong> en 2023, soit <strong>29,1% du PIB</strong>. Le gouvernement Arizona prévoit des économies de <strong>1,9 milliard d'euros</strong> sur les malades longue durée d'ici 2029.</p>
+    
+    <blockquote class="reveal">Ces chiffres ne sont pas une ligne budgétaire, mais le symptôme d'une <strong>hémorragie systémique</strong>. Ils démontrent l'urgence absolue de pivoter d'un modèle qui subventionne l'inactivité à un cadre qui investit dans la contribution.</blockquote>
+  </div>
+</section>
+
+<!-- ══════════════════ ECP ══════════════════ -->
+<section id="ecp">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">L'Économie Contributive Provisionnée</span></h2>
+    <p class="sub reveal">Un changement de paradigme : transformer une dépense passive en investissement socialement rentable</p>
+
+    <div class="card reveal" style="text-align:center;background:linear-gradient(135deg,rgba(152,216,170,0.08),rgba(195,172,208,0.08))">
+      <h4 style="margin-top:0">Principe fondateur</h4>
+      <p style="font-size:1.3rem;margin:1rem 0"><em>"Le travail citoyen doit être valorisé sans condition de statut."</em></p>
+    </div>
+
+    <p class="reveal">L'ECP ne cherche pas à "activer" de force des individus. Le modèle vise à <strong>libérer le potentiel existant</strong> en levant les freins institutionnels qui étouffent aujourd'hui toute initiative.</p>
+
+    <h3 class="reveal">Les 5 garanties fondamentales (non négociables)</h3>
+    <div class="grid3 reveal">
+      <div class="card"><strong>1. Maintien intégral</strong><br>des droits sociaux</div>
+      <div class="card"><strong>2. Non-substitution</strong><br>à l'emploi salarié</div>
+      <div class="card"><strong>3. Liberté</strong><br>de participation</div>
+      <div class="card"><strong>4. Valorisation financière</strong><br>de la contribution</div>
+      <div class="card"><strong>5. Gouvernance</strong><br>paritaire</div>
+    </div>
+
+    <h3 class="reveal">Opportunité stratégique pour les acteurs institutionnels</h3>
+    
+    <details class="reveal">
+      <summary>Pour les Mutuelles — De la gestion de l'incapacité à la promotion de la santé</summary>
+      <div>
+        <p><strong>Le défi existentiel :</strong> Confrontées à l'explosion des incapacités de travail (doublement depuis 2008, coût passé de 4,5 à plus de 9 milliards €), les mutuelles sont piégées dans un modèle d'assurance réactif et financièrement insoutenable. Les 11,7 millions d'affiliés aux mutuelles belges attendent des solutions.</p>
+        <p><strong>La proposition ECP :</strong> Un pivot stratégique vers un modèle de santé proactif et préventif. L'ECP offre un <em>"sas de réactivation sociale progressif et sécurisé"</em> qui rompt l'isolement et restaure la santé mentale et physique, réduisant les risques de chronicité. Pour les mutuelles, c'est l'opportunité de passer du statut de gestionnaire de prestations à celui de promoteur de santé.</p>
+      </div>
+    </details>
+    
+    <details class="reveal">
+      <summary>Pour les Syndicats — De la défense de l'emploi à la valorisation de tout travail</summary>
+      <div>
+        <p><strong>Le défi existentiel :</strong> Avec 3,35 millions de syndiqués (49,1% de taux de syndicalisation), les syndicats doivent défendre leurs membres exclus et rester vigilants face au risque de "travail gratuit". La réforme Arizona limitant le chômage à 2 ans impactera plus de 130 000 personnes.</p>
+        <p><strong>La proposition ECP :</strong> Une offensive audacieuse pour redéfinir le concept même de "travail". En co-gouvernant le dispositif, les syndicats deviennent les <strong>garants de la clause de non-substitution</strong>, tout en étendant leur action au million de personnes hors de leur portée traditionnelle.</p>
+      </div>
+    </details>
+    
+    <details class="reveal">
+      <summary>Pour les Services Publics de l'Emploi — Vers une activation porteuse de sens</summary>
+      <div>
+        <p><strong>Le défi existentiel :</strong> Souvent contraints de gérer des processus administratifs punitifs, ONEM/Forem/Actiris peinent à remplir leur mission fondamentale via des dispositifs d'activation jugés déqualifiants ou infantilisants. 43,8% des chômeurs le sont depuis plus de 2 ans.</p>
+        <p><strong>La proposition ECP :</strong> L'outil qui leur permet enfin de remplir leur véritable mission. L'ECP est une <strong>alternative d'activation porteuse de sens, réellement formatrice et structurante</strong>. C'est un tremplin qui renforce l'employabilité par l'expérience concrète.</p>
+      </div>
+    </details>
+
+    <h3 class="reveal">Impact économique — Projection à maturité (20 000 contributeurs)</h3>
+    <div class="reveal">
+      <table>
+        <tr><th>Catégorie</th><th>Montant annuel</th></tr>
+        <tr><td>Coûts évités (santé, cohésion sociale, etc.)</td><td style="color:var(--a1)"><strong>+ 80 M€/an</strong></td></tr>
+        <tr><td>Revenus générés (TVA, impôts, cotisations)</td><td style="color:var(--a1)"><strong>+ 60 M€/an</strong></td></tr>
+        <tr><td>Coût du dispositif (provisions, gestion)</td><td style="color:var(--a2)">- 50 M€/an</td></tr>
+        <tr><td><strong>BÉNÉFICE NET ANNUEL POUR L'ÉTAT</strong></td><td style="color:var(--a1);font-size:1.2rem"><strong>+ 90 M€/an</strong></td></tr>
+      </table>
+    </div>
+    
+    <blockquote class="reveal">Ce bilan démontre que l'ECP est un modèle vertueux qui génère plus de valeur qu'il n'en coûte, en transformant une charge budgétaire en un levier de développement social et économique durable.</blockquote>
+  </div>
+</section>
+
+<!-- ══════════════════ MCC ══════════════════ -->
+<section id="mcc">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">La Monnaie Contributive Citoyenne</span></h2>
+    <p class="sub reveal">Un levier pour une économie basée sur la valeur sociale</p>
+
+    <h3 class="reveal">Les fondements du nouveau paradigme</h3>
+    
+    <div class="grid2 reveal">
+      <div class="card">
+        <h4 style="margin-top:0">Souveraineté du contributeur</h4>
+        <p><em>"Les contributeurs sont maîtres de leurs contributions"</em></p>
+        <p>Inspiré du droit d'auteur, des licences Creative Commons et du copyleft (EUPL). La MCC garantit que la valeur sociale générée appartient à l'individu qui la crée.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-top:0">Logique des Communs</h4>
+        <p>La MCC alimente les <strong>biens communs</strong> : ressources gérées collectivement pour un bénéfice partagé.</p>
+        <p>Elle est le moteur économique manquant pour reconnaître l'effort humain invisible mais essentiel à la vitalité de nos biens partagés.</p>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <h4 style="margin-top:0">Le "Donut" comme boussole éthique</h4>
+      <p>Basé sur la <strong>Théorie du Donut</strong> de Kate Raworth — un espace d'opération "sûr et juste" délimité par :</p>
+      <ul>
+        <li><strong>Plancher Social :</strong> Garantir à chacun l'accès aux besoins fondamentaux (santé, éducation, lien social...)</li>
+        <li><strong>Plafond Écologique :</strong> Respecter les limites planétaires critiques (climat, biodiversité...)</li>
+      </ul>
+      <p>→ Toute contribution qui aide la société à évoluer dans cet espace est productrice de <strong>valeur sociale</strong>.</p>
+    </div>
+
+    <h3 class="reveal">Mécanisme : Le Provisionnement — La clé pour neutraliser le piège à l'emploi</h3>
+    
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <h4>1. Accumulation</h4>
+        <p>Le contributeur réalise des activités d'utilité sociale et accumule des <strong>points MCC</strong> sur un compte personnel.</p>
+        <p><em>Activités éligibles :</em> Animation d'ateliers, production alimentaire locale, projets de transition écologique, entraide, soutien scolaire, participation à des tiers-lieux...</p>
+      </div>
+      <div class="timeline-item">
+        <h4>2. Provisionnement</h4>
+        <p>La contre-valeur financière est <strong>bloquée et sécurisée</strong> dans un "Fonds de Contribution Citoyenne" dédié.</p>
+        <p><strong>Clé :</strong> Ces montants ne sont PAS considérés comme un revenu → <strong>aucun conflit avec les allocations sociales</strong> (chômage, incapacité, RIS).</p>
+      </div>
+      <div class="timeline-item">
+        <h4>3. Liquidation</h4>
+        <p>Les fonds sont libérés uniquement quand la situation se stabilise (emploi stable, pension, sortie volontaire du système).</p>
+        <p>Ce mécanisme ne se contente pas d'éviter le "piège à l'emploi" ; il le <strong>désamorce</strong> en résolvant le conflit fondamental entre reconnaissance de la contribution et logiques de sécurité sociale.</p>
+      </div>
+    </div>
+
+    <h3 class="reveal">Gouvernance : Consortium pour le Bien Commun</h3>
+    <div class="grid3 reveal">
+      <div class="card" style="text-align:center"><strong>ASBL</strong><br>Porteuses de projets terrain</div>
+      <div class="card" style="text-align:center"><strong>Mutuelles</strong><br>MC, Solidaris, MLOZ...<br><small>(11,7M affiliés)</small></div>
+      <div class="card" style="text-align:center"><strong>Syndicats</strong><br>CSC, FGTB, CGSLB<br><small>(3,35M membres)</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ PILIERS ══════════════════ -->
+<section id="piliers">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">Les Piliers en Compétition</span></h2>
+    <p class="sub reveal">Pilarisation belge vs Alternative systémique — Que le meilleur modèle gagne</p>
+
+    <h3 class="reveal">La pilarisation belge : rappel</h3>
+    <p class="reveal">Phénomène où le paysage associatif est fortement structuré par les affiliations aux partis politiques traditionnels. Les trois piliers historiques dominent la Belgique depuis plus d'un siècle.</p>
+    
+    <div class="grid3 reveal">
+      <div class="card" style="border-left:4px solid #e74c3c">
+        <h4 style="color:#e74c3c;margin-top:0">Pilier Socialiste</h4>
+        <p>Solidaris (~3,3M affiliés)<br>FGTB (1,54M membres)<br>35% des voix aux élections sociales 2024</p>
+      </div>
+      <div class="card" style="border-left:4px solid #3498db">
+        <h4 style="color:#3498db;margin-top:0">Pilier Chrétien</h4>
+        <p>Mutualité Chrétienne (~4,6M affiliés)<br>CSC (1,5M membres)<br>50% des voix aux élections sociales 2024</p>
+      </div>
+      <div class="card" style="border-left:4px solid #f1c40f">
+        <h4 style="color:#f1c40f;margin-top:0">Pilier Libéral</h4>
+        <p>Mutualités Libérales + MLOZ (~2,9M affiliés)<br>CGSLB (309K membres)<br>14% des voix aux élections sociales 2024</p>
+      </div>
+    </div>
+
+    <blockquote class="reveal">Le problème : cette pilarisation existe "par le haut" (les politiques) plutôt que "par le bas" (les populations). Elle structure un système qui perpétue ses propres intérêts au détriment de l'innovation sociale.</blockquote>
+
+    <h3 class="reveal">Comparatif : Système actuel vs ECP</h3>
+    <div class="reveal">
+      <table>
+        <tr><th>Critère</th><th>Système actuel</th><th>ECP / MCC</th></tr>
+        <tr><td>Philosophie</td><td>Indemnisation de l'inactivité</td><td><strong>Valorisation de la contribution</strong></td></tr>
+        <tr><td>Effet sur l'initiative</td><td>Pénalise toute activité</td><td><strong>Encourage sans pénalité</strong></td></tr>
+        <tr><td>Coût annuel</td><td>>15,5 Mrd€ (dépense passive)</td><td><strong>+90M€ bénéfice net projeté</strong></td></tr>
+        <tr><td>Impact santé mentale</td><td>Isolement, perte de sens</td><td><strong>Lien social, utilité, dignité</strong></td></tr>
+        <tr><td>Gouvernance</td><td>Pilarisée, verticale</td><td><strong>Paritaire, horizontale</strong></td></tr>
+        <tr><td>Adaptation locale</td><td>Rigide, administrative</td><td><strong>Flexible, bottom-up</strong></td></tr>
+      </table>
+    </div>
+
+    <h3 class="reveal">L'appel d'offre citoyen</h3>
+    <div class="card reveal" style="background:linear-gradient(135deg,rgba(152,216,170,0.1),rgba(195,172,208,0.1));border:2px solid var(--a1)">
+      <p style="font-size:1.15rem;text-align:center;margin-bottom:1rem"><strong>Nous mettons les piliers en compétition ouverte.</strong></p>
+      <p style="text-align:center">Que chaque pilier propose sa réponse au diagnostic. Que les citoyens comparent. Que le meilleur modèle émerge — ou que les piliers adoptent l'ECP.</p>
+      <p style="text-align:center;margin-bottom:0"><em>L'ECP est notre candidat. Quel est le vôtre ?</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ VEILLE ══════════════════ -->
+<section id="veille">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">Veille Stratégique Citoyenne</span></h2>
+    <p class="sub reveal">Le cinquième pouvoir — Surveiller, analyser, agir</p>
+
+    <h3 class="reveal">Différence fondamentale</h3>
+    <div class="reveal">
+      <table>
+        <tr><th>Veille stratégique</th><th>Veille citoyenne</th></tr>
+        <tr><td>Organisée par une organisation pour anticiper son environnement (marché, concurrence, technologie)</td><td>Surveillance par les citoyens sur l'action publique pour des objectifs <strong>démocratiques</strong></td></tr>
+      </table>
+    </div>
+
+    <h3 class="reveal">Les 3 objectifs de la veille citoyenne</h3>
+    <div class="grid3 reveal">
+      <div class="card" style="text-align:center"><strong>Transparence</strong><br>de l'action publique</div>
+      <div class="card" style="text-align:center"><strong>Redevabilité</strong><br>(accountability) des institutions</div>
+      <div class="card" style="text-align:center"><strong>Démocratie participative</strong><br>Implication active des citoyens</div>
+    </div>
+
+    <h3 class="reveal">Processus en 5 étapes</h3>
+    <div class="timeline reveal">
+      <div class="timeline-item"><h4>1. Identification</h4><p>Repérer les sujets à surveiller (budgets, promesses électorales, décisions politiques)</p></div>
+      <div class="timeline-item"><h4>2. Collecte</h4><p>Rassembler les informations via le droit d'accès (Article 32 Constitution), l'observation, les sources ouvertes</p></div>
+      <div class="timeline-item"><h4>3. Analyse</h4><p>Vérifier les données, comparer aux engagements, détecter les écarts et signaux faibles</p></div>
+      <div class="timeline-item"><h4>4. Diffusion</h4><p>Publier les résultats pour informer le public et interpeller les autorités</p></div>
+      <div class="timeline-item"><h4>5. Suivi</h4><p>Évaluer l'impact des actions et ajuster la stratégie en continu</p></div>
+    </div>
+
+    <h3 class="reveal">Base légale en Belgique</h3>
+    <div class="card reveal">
+      <p><strong>Article 32 de la Constitution</strong> : principe de publicité de l'administration — chaque citoyen a le droit de consulter les documents administratifs.</p>
+      <p><strong>Loi du 11 avril 1994</strong> : publicité de l'administration au niveau fédéral + décrets régionaux équivalents.</p>
+      <p>→ Ces bases légales permettent d'exiger la transparence des pouvoirs publics.</p>
+    </div>
+
+    <h3 class="reveal">Référence internationale : Ushahidi</h3>
+    <p class="reveal">Plateforme de <strong>crowdmapping</strong> (cartographie participative) développée au Kenya en 2008. Rôle pionnier : permettre aux citoyens de signaler par SMS les violences post-électorales, cartographiées en temps réel → mémoire vivante des événements + contre-pouvoir citoyen décentralisé.</p>
+  </div>
+</section>
+
+<!-- ══════════════════ LIEUX DE LIENS ══════════════════ -->
+<section id="lieux">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">Les Lieux de Liens</span></h2>
+    <p class="sub reveal">Un modèle belge d'innovation sociale pour la santé mentale et la cohésion sociale — 30 ans de maturation</p>
+
+    <h3 class="reveal">Philosophie de l'accueil inconditionnel</h3>
+    <ul class="reveal">
+      <li><strong>Accueil inconditionnel et déstigmatisation</strong> : espaces bienveillants où la fragilité psychologique n'est pas une étiquette mais une composante de l'expérience humaine</li>
+      <li><strong>Création de lien social comme alternative à la médicalisation</strong> : le renforcement des liens sociaux est en soi un puissant levier de bien-être et de santé mentale</li>
+      <li><strong>Approche centrée sur la personne et l'ancrage local</strong> : chaque lieu s'adapte à son quartier et aux besoins de ses membres</li>
+    </ul>
+
+    <blockquote class="reveal">L'absence de définition rigide n'est pas une faiblesse mais une <strong>force conceptuelle délibérée</strong>. Cette souplesse permet une adaptation fine aux contextes locaux et aux initiatives citoyennes. — CBCS</blockquote>
+
+    <h3 class="reveal">Positionnement dans l'écosystème socio-sanitaire</h3>
+    <div class="reveal">
+      <table>
+        <tr><th>Modèle</th><th>Mission</th><th>Public</th></tr>
+        <tr><td><strong>Lieux de liens</strong></td><td>Lien social, déstigmatisation, non-médicalisé</td><td>Ouvert à tous, intergénérationnel</td></tr>
+        <tr><td>Services Santé Mentale</td><td>Diagnostic, traitement, prévention</td><td>Suivi psy/psychiatrique</td></tr>
+        <tr><td>Centres de jour</td><td>Cadre structurant, réinsertion</td><td>Adultes en réhabilitation</td></tr>
+        <tr><td>Tiers-lieux</td><td>Coworking, innovation</td><td>Indépendants, startups</td></tr>
+      </table>
+    </div>
+
+    <h3 class="reveal">Cadre financier et territorial</h3>
+    <div class="stats reveal">
+      <div class="stat"><div class="n">30+ M€</div><div class="l">Soutien annuel combiné</div></div>
+      <div class="stat"><div class="n">~400</div><div class="l">Opérateurs à Bruxelles (COCOF)</div></div>
+      <div class="stat"><div class="n">195</div><div class="l">PCS actifs en Wallonie</div></div>
+      <div class="stat"><div class="n">23 M€</div><div class="l">Budget PCS Wallonie 2025</div></div>
+    </div>
+
+    <h3 class="reveal">Exemples de modèles opérationnels</h3>
+    <div class="grid2 reveal">
+      <div class="card"><div class="card-header"><h4>Le Pianocktail (Marolles)</h4><span class="tag">Autogestion radicale</span></div><p>Aucun salarié, assemblée participative mensuelle, horizontalité pure. L'offre d'alcool déstigmatise et abolit les statuts "usager/citoyen".</p></div>
+      <div class="card"><div class="card-header"><h4>Circuit (Antonin Artaud)</h4><span class="tag">Interface médico-sociale</span></div><p>"Pont" entre le Centre de Santé Mentale et la communauté. Transition douce entre soin institutionnel et lien social spontané.</p></div>
+      <div class="card"><div class="card-header"><h4>Espace 51 (Schaerbeek)</h4><span class="tag">Gouvernance partagée</span></div><p>Assemblée mensuelle et groupes de travail. Co-construction entre usagers, professionnels et bénévoles.</p></div>
+      <div class="card"><div class="card-header"><h4>Club NorWest (Jette)</h4><span class="tag">Bottom-up</span></div><p>Né d'associations d'usagers et proches. Binôme professionnel-bénévole. Activités issues des besoins exprimés par les membres.</p></div>
+    </div>
+
+    <h3 class="reveal">Défis stratégiques</h3>
+    <div class="grid2 reveal">
+      <div class="card" style="border-left:4px solid #e74c3c">
+        <h4 style="color:#e74c3c;margin-top:0">Précarité financière structurelle</h4>
+        <p><em>"On est sur un siège éjectable à cause de l'absence de Gouvernement, des Douzièmes provisoires non encore reconduits, et des coupes budgétaires annoncées."</em> — Françoise Calonne, Espace 51</p>
+      </div>
+      <div class="card" style="border-left:4px solid #f39c12">
+        <h4 style="color:#f39c12;margin-top:0">Manque de reconnaissance institutionnelle</h4>
+        <p>Absence de cadre législatif unifié à Bruxelles, définition variable, invisibilité dans les études officielles.<br><em>"Il n'y a pas de marque déposée, il n'y a pas de règles bien claires."</em> — F. Wyngaerden</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ÉDUCATION PERMANENTE ══════════════════ -->
+<section id="edperm">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">Éducation Permanente</span></h2>
+    <p class="sub reveal">Le cadre légal et philosophique — Décret FWB du 17 juillet 2003 (modifié 2018, 2021)</p>
+
+    <h3 class="reveal">Le secteur en chiffres</h3>
+    <div class="stats reveal">
+      <div class="stat"><div class="n">~280</div><div class="l">ASBL reconnues</div></div>
+      <div class="stat"><div class="n">~2 300</div><div class="l">Équivalents temps plein</div></div>
+      <div class="stat"><div class="n">>320 M€</div><div class="l">Budget culturel FWB</div></div>
+    </div>
+
+    <h3 class="reveal">Objectifs (FWB)</h3>
+    <ul class="reveal">
+      <li><strong>Analyse critique de la société</strong></li>
+      <li><strong>Stimulation d'initiatives démocratiques et collectives</strong></li>
+      <li><strong>Développement de la citoyenneté active</strong></li>
+      <li>Dans une perspective d'<strong>émancipation</strong> individuelle et collective</li>
+    </ul>
+
+    <h3 class="reveal">L'EP comme contre-pouvoir</h3>
+    <blockquote class="reveal">L'EP est un "contre-pouvoir" car ce secteur <strong>consolide et arme la société civile</strong>. Il permet au pouvoir politique d'avoir face à lui des interlocuteurs structurés et vigilants, augmentant ainsi les capacités d'expression du tissu associatif. — Bénédicte Linard</blockquote>
+
+    <h3 class="reveal">La tension temps long / temps court</h3>
+    <p class="reveal">Le <strong>"temps long"</strong> est nécessaire aux processus d'analyse critique et d'émancipation propres à l'EP. Mais les populations vivent dans le <strong>"temps court"</strong> de l'immédiateté, cherchant des réponses rapides à des besoins vitaux.</p>
+    <p class="reveal">La crise COVID a exacerbé cette tension : passage du collectif à l'individuel, recours accru au numérique, intervention dans l'espace public mise entre parenthèses.</p>
+
+    <h3 class="reveal">Concepts clés</h3>
+    <div class="reveal">
+      <table>
+        <tr><th>Terme</th><th>Définition</th></tr>
+        <tr><td><strong>Démocratie culturelle</strong></td><td>Travail d'expression, d'analyse et de délibération collective. "La culture par chacun et avec chacun." S'oppose à la simple démocratisation de la culture.</td></tr>
+        <tr><td><strong>Droits culturels</strong></td><td>Liberté artistique + accès à la culture + participation à la culture. Nouvelle boussole des politiques culturelles.</td></tr>
+        <tr><td><strong>Populations minorisées</strong></td><td>Placées en position de soumission dans un rapport de forces, indépendamment de leur nombre (≠ minoritaires). Ex: les femmes.</td></tr>
+        <tr><td><strong>Autonomie associative</strong></td><td>Essentielle pour le rôle de contre-pouvoir. Mise à mal par la surcharge administrative et les "commandes directes" politiques.</td></tr>
+      </table>
+    </div>
+
+    <h3 class="reveal">Les 3 grands changements à venir (Jean De Munck)</h3>
+    <div class="grid3 reveal">
+      <div class="card" style="text-align:center"><strong>Inclusion</strong><br>Exigence croissante de reconnaissance des différences</div>
+      <div class="card" style="text-align:center"><strong>Digitalisation</strong><br>Effets ambivalents sur la démocratie</div>
+      <div class="card" style="text-align:center"><strong>Transition écologique</strong><br>Changer notre idée de la prospérité</div>
+    </div>
+
+    <h3 class="reveal">Contexte budgétaire actuel</h3>
+    <p class="reveal">Le secteur fait face à des restrictions : <strong>non-indexation des budgets</strong> pour 2025-2029 et économies de 12,9 millions d'euros (4%). La ministre-présidente Élisabeth Degryse a toutefois confirmé le maintien des politiques culturelles et d'éducation permanente.</p>
+  </div>
+</section>
+
+<!-- ══════════════════ ROADMAP ══════════════════ -->
+<section id="roadmap">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">Feuille de Route Stratégique</span></h2>
+    <p class="sub reveal">Du pilote à l'institutionnalisation — Plan d'action phasé</p>
+
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <h4>Phase 1 — Démonstration (2026)</h4>
+        <p><strong>Objectif :</strong> Prouver la faisabilité et l'impact sur le terrain.</p>
+        <ul>
+          <li>Lancement de projets-pilotes ("Arpentages Citoyens pour l'Interculturalité")</li>
+          <li>Mobilisation des premiers contributeurs (objectif : 100)</li>
+          <li>Documentation rigoureuse des bénéfices individuels et collectifs</li>
+          <li>Structure porteuse : ASBL dédiée + coopérative d'activité (Job Yourself, Smart)</li>
+          <li>Appui stratégique : SAW-B, CoopCity</li>
+        </ul>
+      </div>
+      <div class="timeline-item">
+        <h4>Phase 2 — Coalition (2027)</h4>
+        <p><strong>Objectif :</strong> Construire une alliance institutionnelle solide.</p>
+        <ul>
+          <li>Création formelle du <strong>Fonds de Contribution Citoyenne</strong></li>
+          <li>Partenariat étroit avec mutuelles (MC, Solidaris) et syndicats (CSC, FGTB)</li>
+          <li>Publication d'un <strong>livre blanc</strong> avec données d'impact et propositions législatives</li>
+          <li>Dialogue structuré avec les cabinets ministériels</li>
+        </ul>
+      </div>
+      <div class="timeline-item">
+        <h4>Phase 3 — Institutionnalisation (2028-2030)</h4>
+        <p><strong>Objectif :</strong> Inscrire l'ECP dans un cadre légal pérenne.</p>
+        <ul>
+          <li>Expérimentation officielle à large échelle</li>
+          <li>Proposition de loi au Parlement</li>
+          <li>Création d'un <strong>statut de "Contributeur Citoyen"</strong> reconnu légalement</li>
+          <li>Montée en puissance : 20 000 contributeurs à maturité</li>
+        </ul>
+      </div>
+    </div>
+
+    <blockquote class="reveal">L'histoire jugera notre capacité à transformer ce moment de crise en une opportunité de refondation sociale. Nous ne vous invitons pas à un projet-pilote, mais à <strong>co-écrire le prochain chapitre de notre contrat social</strong>.</blockquote>
+  </div>
+</section>
+
+<!-- ══════════════════ RAID ══════════════════ -->
+<section id="raid">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">Raid du 22 Janvier 2026</span></h2>
+    <p class="sub reveal">Opération internationale — L'éducation populaire hacke le système</p>
+
+    <div class="card reveal" style="background:linear-gradient(135deg,rgba(152,216,170,0.12),rgba(195,172,208,0.12));border:2px solid var(--a1)">
+      <h3 style="text-align:center;margin-top:0">🎯 Objectif</h3>
+      <p style="font-size:1.15rem;text-align:center;margin-bottom:0">Démontrer comment l'éducation populaire peut retourner le système contre lui-même. <strong>Gagner les cœurs, puis les esprits.</strong> Le reste du monde suivra.</p>
+    </div>
+
+    <h3 class="reveal">Calendrier opérationnel</h3>
+    <div class="reveal">
+      <table>
+        <tr><th>Phase</th><th>Dates</th><th>Actions</th></tr>
+        <tr><td><strong>Fondation</strong></td><td>14-16/01</td><td>Site complet en ligne, contenu core finalisé</td></tr>
+        <tr><td><strong>Infiltration</strong></td><td>17-19/01</td><td>Teasing réseaux, recrutement early adopters</td></tr>
+        <tr><td><strong>Armement</strong></td><td>20-21/01</td><td>Kit de raid prêt (visuels, messages, instructions)</td></tr>
+        <tr><td><strong>🚀 RAID</strong></td><td><strong>22/01</strong></td><td>Action coordonnée internationale</td></tr>
+      </table>
+    </div>
+
+    <h3 class="reveal">Kit de participation</h3>
+    <div class="grid2 reveal">
+      <div class="card">
+        <h4 style="margin-top:0">⭐ Action minimale (30 sec)</h4>
+        <p>Star le repo GitHub = <strong>1 voix citoyenne</strong></p>
+        <p>C'est tout. C'est gratuit. C'est permanent.</p>
+        <a href="https://github.com/ouaisfieu/ccplc" target="_blank" class="btn btn-p" style="display:block;text-align:center;margin-top:1rem">Star maintenant</a>
+      </div>
+      <div class="card">
+        <h4 style="margin-top:0">📢 Amplification (5 min+)</h4>
+        <ul>
+          <li>Partager le manifeste sur vos réseaux</li>
+          <li>Traduire le contenu (EN, NL, DE...)</li>
+          <li>Contacter vos réseaux associatifs</li>
+          <li>Interpeller vos élus locaux</li>
+          <li>Proposer un projet-pilote dans votre commune</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="reveal">Ressources</h3>
+    <ul class="reveal">
+      <li><a href="https://ouaisfieu.github.io/tech/" target="_blank">DOCTech</a> — Documentation complète (pilarisation, particratie, ECP, veille...)</li>
+      <li><a href="https://ouaisfieu.github.io/confiance/" target="_blank">Outils libres</a> — CRM citoyen, !SPAM OS, ARG</li>
+      <li><a href="https://ouaisfieu.github.io/ccplc/" target="_blank">Hub CCPLC</a> — Point d'entrée du collectif</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════════ PARTENARIATS ══════════════════ -->
+<section id="partenariats">
+  <div class="container">
+    <h2 class="reveal"><span class="gr">Partenariats Stratégiques</span></h2>
+    <p class="sub reveal">Exemples de propositions en cours de développement</p>
+
+    <div class="card reveal">
+      <div class="card-header">
+        <h4>Projet Pilote "Ateliers Budget & Droits"</h4>
+        <span class="tag">Colruyt Group Academy</span>
+      </div>
+      <p><strong>Concept :</strong> Ateliers pratiques + webinaires + kit FALC (Facile à Lire et à Comprendre)</p>
+      <p><strong>Objectifs :</strong></p>
+      <ul>
+        <li>Lutter contre le non-recours aux droits (statut BIM, aides spécifiques)</li>
+        <li>Améliorer la gestion budgétaire des ménages</li>
+        <li>Renforcer l'autonomie face aux démarches administratives</li>
+      </ul>
+      <p><strong>Périmètre :</strong> 1-3 communes pilotes, focus bénéficiaires intervention majorée (BIM)</p>
+      <p><strong>KPIs :</strong> 120 participants, coût/participant, % activation nouveaux droits</p>
+      <p><strong>Logique Win-Win-Win :</strong> Colruyt (RSE + image + reporting durabilité) + Participants (pouvoir d'achat + autonomie) + Société (cohésion sociale)</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+  <p><strong>CCPLC</strong> — Collectif Citoyen pour la Participation Libre (et Consciente)</p>
+  <p style="margin-top:0.5rem">
+    <a href="https://ouaisfieu.github.io/ccplc/">Hub</a> · 
+    <a href="https://ouaisfieu.github.io/tech/">DOCTech</a> · 
+    <a href="https://ouaisfieu.github.io/confiance/">Outils</a> · 
+    <a href="https://github.com/ouaisfieu/ccplc">GitHub</a>
+  </p>
+  <p style="margin-top:1.5rem;font-size:0.8rem;color:var(--tx3)">Fork Belgium — L'éducation populaire hacke le système en le retournant contre lui-même</p>
+  <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--tx3)">Sources : INAMI 2023, ONEM oct. 2025, SPP Intégration Sociale 2024, Cour des Comptes, IWEPS, FWB</p>
+</footer>
+
+<script>
+// ══════════════════ PARTICLES ══════════════════
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+let particles=[],mouse={x:null,y:null,r:150};
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
+resize();addEventListener('resize',resize);
+addEventListener('mousemove',e=>{mouse.x=e.x;mouse.y=e.y});
+addEventListener('mouseout',()=>{mouse.x=mouse.y=null});
+
+class Particle{
+  constructor(){this.reset()}
+  reset(){
+    this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;
+    this.bx=this.x;this.by=this.y;
+    this.vx=(Math.random()-0.5)*0.4;this.vy=(Math.random()-0.5)*0.4;
+    this.r=Math.random()*2+1;this.d=(Math.random()*30)+1;this.o=Math.random()*0.5+0.3;
+  }
+  update(){
+    if(mouse.x!=null&&mouse.y!=null){
+      let dx=mouse.x-this.x,dy=mouse.y-this.y,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<mouse.r){
+        let f=(mouse.r-dist)/mouse.r;
+        this.x-=(dx/dist)*f*this.d*0.5;
+        this.y-=(dy/dist)*f*this.d*0.5;
+      }else{
+        this.x+=(this.bx-this.x)*0.05;
+        this.y+=(this.by-this.y)*0.05;
+      }
+    }
+    this.x+=this.vx;this.y+=this.vy;
+    if(this.x<0||this.x>canvas.width)this.vx*=-1;
+    if(this.y<0||this.y>canvas.height)this.vy*=-1;
+  }
+  draw(){
+    const s=getComputedStyle(document.documentElement);
+    const c=s.getPropertyValue('--a1').trim()||'#98D8AA';
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=c;ctx.globalAlpha=this.o;ctx.fill();ctx.globalAlpha=1;
+  }
+}
+
+function initP(){
+  particles=[];
+  const n=Math.min(100,Math.floor((canvas.width*canvas.height)/12000));
+  for(let i=0;i<n;i++)particles.push(new Particle());
+}
+initP();addEventListener('resize',initP);
+
+function drawConnections(){
+  const s=getComputedStyle(document.documentElement);
+  const c=s.getPropertyValue('--a2').trim()||'#C3ACD0';
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<130){
+        ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=c;ctx.globalAlpha=0.12*(1-d/130);
+        ctx.lineWidth=1;ctx.stroke();ctx.globalAlpha=1;
+      }
+    }
+  }
+}
+
+function animateP(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{p.update();p.draw()});
+  drawConnections();
+  requestAnimationFrame(animateP);
+}
+animateP();
+
+// ══════════════════ THEME ══════════════════
+function setTheme(t){
+  document.documentElement.style.transition='all 0.4s ease';
+  document.documentElement.setAttribute('data-theme',t);
+  document.querySelectorAll('.themes button').forEach(b=>b.classList.remove('on'));
+  event.target.classList.add('on');
+  setTimeout(()=>particles.forEach(p=>p.reset()),100);
+}
+
+// ══════════════════ COUNTDOWN TO 22 JAN 2026 ══════════════════
+function updateCD(){
+  const target=new Date('2026-01-22T00:00:00+01:00'),now=new Date(),diff=target-now;
+  if(diff<=0){
+    document.getElementById('cd-d').textContent='🚀';
+    document.getElementById('cd-h').textContent='GO';
+    document.getElementById('cd-m').textContent='GO';
+    document.getElementById('cd-s').textContent='GO';
+    return;
+  }
+  const d=Math.floor(diff/864e5),h=Math.floor(diff%864e5/36e5),m=Math.floor(diff%36e5/6e4),s=Math.floor(diff%6e4/1e3);
+  document.getElementById('cd-d').textContent=String(d).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
+}
+updateCD();setInterval(updateCD,1000);
+
+// ══════════════════ SCROLL PROGRESS ══════════════════
+addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-innerHeight;
+  const p=(scrollY/h)*100;
+  document.getElementById('scrollProgress').style.width=p+'%';
+});
+
+// ══════════════════ REVEAL ON SCROLL ══════════════════
+const revealEls=document.querySelectorAll('.reveal,.reveal-left,.timeline-item');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active')});
+},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+revealEls.forEach(el=>obs.observe(el));
+
+// ══════════════════ SMOOTH SCROLL ══════════════════
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+</body>
+</html>
