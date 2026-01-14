@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renforcer le Maillage Numérique et Social en Belgique</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome (for icons via font, avoiding SVG tags) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chosen Palette: Warm Community (Warm Neutrals & Amber/Teal) -->
+    <!-- 
+        Background: #fafaf9 (Stone 50)
+        Primary Text: #1c1917 (Stone 900)
+        Accent 1 (Community): #d97706 (Amber 600)
+        Accent 2 (Structure): #0d9488 (Teal 600)
+        Cards: #ffffff (White)
+    -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stone: {
+                            50: '#fafaf9',
+                            100: '#f5f5f4',
+                            200: '#e7e5e4',
+                            800: '#292524',
+                            900: '#1c1917',
+                        },
+                        amber: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        teal: {
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Styles for Chart Containers */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 350px;
+            max-height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        /* Smooth transitions */
+        .transition-all-300 {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Active tab styling */
+        .tab-active {
+            border-bottom: 3px solid #d97706; /* amber-600 */
+            color: #d97706;
+            font-weight: 600;
+        }
+        
+        .tab-inactive {
+            color: #78716c; /* stone-500 */
+            border-bottom: 3px solid transparent;
+        }
+        .tab-inactive:hover {
+            color: #292524;
+            border-bottom: 3px solid #e7e5e4;
+        }
+
+        /* Custom Scrollbar for text areas */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f5f5f4;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: #d6d3d1;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-900 font-sans leading-relaxed selection:bg-amber-100 selection:text-amber-900">
+
+    <!-- Application Structure Plan: 
+         1. Header: Establish the mission (Creating the Mesh).
+         2. Interactive Dashboard (The Core): A 3-column layout.
+            - Left: The Actors (Who). Clicking cards updates the center context.
+            - Center: The Strategy Simulator (How). Inputs affecting the chart.
+            - Right: The Impact Viz (Why). Real-time feedback via Chart.js.
+         3. Methodology Section: "Steps to Partnerships" (Accordions).
+         4. Key Factors Matrix: Grid view of what works vs what fails.
+         5. Footer: Call to action.
+         Rationale: This structure moves from 'Who' to 'How' to 'Result', allowing the user to simulate the effect of partnerships directly.
+    -->
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <span class="text-2xl text-amber-600"><i class="fa-solid fa-network-wired"></i></span>
+                        <span class="font-bold text-xl tracking-tight text-stone-800">Maillage<span class="text-amber-600">Local</span>.be</span>
+                    </div>
+                </div>
+                <div class="hidden sm:flex sm:items-center sm:space-x-8">
+                    <button onclick="scrollToSection('ecosystem')" class="text-stone-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">L'Écosystème</button>
+                    <button onclick="scrollToSection('simulator')" class="text-stone-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Simulateur d'Impact</button>
+                    <button onclick="scrollToSection('roadmap')" class="text-stone-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Feuille de Route</button>
+                </div>
+                <!-- Mobile menu button placeholder -->
+                <div class="flex items-center sm:hidden">
+                    <button class="text-stone-500 hover:text-stone-700 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-white border-b border-stone-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl font-extrabold text-stone-900 sm:text-4xl md:text-5xl">
+                Tisser un lien social et numérique durable
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-stone-500">
+                Comment transformer des acteurs isolés (EPN, Bibliothèques, CPAS, Tiers-Lieux) en une force collective pour combattre la fracture numérique en Belgique ?
+            </p>
+            <div class="mt-8 flex justify-center gap-4">
+                <button onclick="scrollToSection('simulator')" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 transition-colors">
+                    <i class="fa-solid fa-play mr-2"></i> Lancer la Simulation
+                </button>
+                <button onclick="scrollToSection('roadmap')" class="inline-flex items-center px-6 py-3 border border-stone-300 text-base font-medium rounded-md text-stone-700 bg-white hover:bg-stone-50 transition-colors">
+                    <i class="fa-solid fa-list-check mr-2"></i> Voir la Méthode
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- SECTION 1: THE ECOSYSTEM (Interactive Cards) -->
+        <!-- Context: Explains the roles of each actor before simulating their interaction. -->
+        <section id="ecosystem" class="scroll-mt-20">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-800 flex items-center gap-2">
+                    <i class="fa-solid fa-users-viewfinder text-teal-600"></i>
+                    Comprendre les Acteurs du Territoire
+                </h2>
+                <p class="mt-2 text-stone-600 max-w-3xl">
+                    Pour créer un maillage serré, il faut d'abord comprendre les forces et les besoins de chaque partenaire potentiel. Cliquez sur un acteur pour révéler son rôle stratégique dans l'inclusion numérique.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1: EPN -->
+                <div onclick="selectActor('epn')" class="cursor-pointer group bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-amber-500 hover:shadow-md transition-all-300 p-6 text-center" id="card-epn">
+                    <div class="w-14 h-14 mx-auto bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-computer text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-stone-800">EPN</h3>
+                    <p class="text-sm text-stone-500 mt-1">Espace Public Numérique</p>
+                </div>
+
+                <!-- Card 2: Bibliothèque -->
+                <div onclick="selectActor('biblio')" class="cursor-pointer group bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-teal-500 hover:shadow-md transition-all-300 p-6 text-center" id="card-biblio">
+                    <div class="w-14 h-14 mx-auto bg-teal-100 rounded-full flex items-center justify-center text-teal-600 mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-book-open text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-stone-800">Bibliothèque</h3>
+                    <p class="text-sm text-stone-500 mt-1">Lieu de Savoir Ouvert</p>
+                </div>
+
+                <!-- Card 3: CPAS -->
+                <div onclick="selectActor('cpas')" class="cursor-pointer group bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-rose-500 hover:shadow-md transition-all-300 p-6 text-center" id="card-cpas">
+                    <div class="w-14 h-14 mx-auto bg-rose-100 rounded-full flex items-center justify-center text-rose-600 mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-hands-holding-circle text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-stone-800">CPAS</h3>
+                    <p class="text-sm text-stone-500 mt-1">Action Sociale</p>
+                </div>
+
+                <!-- Card 4: Lieux de Liens -->
+                <div onclick="selectActor('liens')" class="cursor-pointer group bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-indigo-500 hover:shadow-md transition-all-300 p-6 text-center" id="card-liens">
+                    <div class="w-14 h-14 mx-auto bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-mug-hot text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-stone-800">Lieux de Liens</h3>
+                    <p class="text-sm text-stone-500 mt-1">Cohésion Sociale</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Detail Panel -->
+            <div id="actor-detail-panel" class="mt-6 bg-white rounded-xl shadow-sm border border-stone-200 p-6 hidden animate-fade-in">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-1/3 border-r border-stone-100 pr-4">
+                        <h3 id="detail-title" class="text-2xl font-bold text-stone-800 mb-2"></h3>
+                        <p id="detail-desc" class="text-stone-600 italic mb-4"></p>
+                        <div class="bg-stone-50 p-3 rounded-lg">
+                            <h4 class="font-semibold text-xs uppercase tracking-wide text-stone-500 mb-1">Public Cible</h4>
+                            <p id="detail-audience" class="text-stone-800 font-medium"></p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/3">
+                        <h4 class="font-bold text-teal-700 mb-3 flex items-center"><i class="fa-solid fa-circle-plus mr-2 text-sm"></i> Apports au Maillage</h4>
+                        <ul id="detail-assets" class="space-y-2 text-stone-600 text-sm"></ul>
+                    </div>
+                    <div class="md:w-1/3">
+                        <h4 class="font-bold text-amber-700 mb-3 flex items-center"><i class="fa-solid fa-circle-question mr-2 text-sm"></i> Besoins / Défis</h4>
+                        <ul id="detail-needs" class="space-y-2 text-stone-600 text-sm"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: SIMULATOR (Visualization & Content Choice) -->
+        <!-- Goal: Change/Understand. Visualization: Radar Chart & Bar Chart. 
+             Rationale: Users need to see how "soft" actions (meetings, sharing) translate to "hard" results (efficiency, coverage). -->
+        <section id="simulator" class="scroll-mt-20 bg-stone-50 rounded-2xl border border-stone-200 overflow-hidden">
+            <div class="p-6 md:p-8 bg-white border-b border-stone-200">
+                <h2 class="text-2xl font-bold text-stone-800 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-amber-600"></i>
+                    Simulateur de Synergie Territoriale
+                </h2>
+                <p class="mt-2 text-stone-600">
+                    Ajustez les leviers de collaboration ci-dessous pour voir comment ils renforcent le maillage territorial. Observez l'impact sur la qualité du service rendu au citoyen.
+                </p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row">
+                <!-- Controls Side -->
+                <div class="w-full lg:w-1/3 p-6 md:p-8 bg-stone-50 space-y-8 border-r border-stone-200">
+                    
+                    <!-- Control Group 1 -->
+                    <div>
+                        <label class="flex justify-between items-center text-sm font-bold text-stone-700 mb-2">
+                            <span>Fréquence de Coordination</span>
+                            <span id="val-coord" class="text-amber-600 bg-amber-50 px-2 py-1 rounded">Faible</span>
+                        </label>
+                        <input type="range" id="input-coord" min="1" max="5" value="2" class="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-amber-600">
+                        <p class="text-xs text-stone-500 mt-1">Réunions, échanges d'info, planification commune.</p>
+                    </div>
+
+                    <!-- Control Group 2 -->
+                    <div>
+                        <label class="flex justify-between items-center text-sm font-bold text-stone-700 mb-2">
+                            <span>Outils Partagés</span>
+                            <span id="val-tools" class="text-teal-600 bg-teal-50 px-2 py-1 rounded">Basique</span>
+                        </label>
+                        <input type="range" id="input-tools" min="1" max="5" value="1" class="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-teal-600">
+                        <p class="text-xs text-stone-500 mt-1">Logiciels de suivi, cartographie commune, agendas.</p>
+                    </div>
+
+                    <!-- Control Group 3 -->
+                    <div>
+                        <label class="flex justify-between items-center text-sm font-bold text-stone-700 mb-2">
+                            <span>Actions de Terrain</span>
+                            <span id="val-action" class="text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Isolées</span>
+                        </label>
+                        <input type="range" id="input-action" min="1" max="5" value="2" class="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        <p class="text-xs text-stone-500 mt-1">Permanences croisées, ateliers conjoints, événements.</p>
+                    </div>
+
+                    <div class="pt-4 border-t border-stone-200">
+                        <h4 class="font-bold text-stone-800 text-sm mb-2">État du Maillage :</h4>
+                        <div id="mesh-status" class="text-lg font-bold text-stone-400">Fragmenté</div>
+                        <p id="mesh-advice" class="text-xs text-stone-500 mt-2 italic leading-relaxed">Augmentez la coordination pour débloquer le potentiel.</p>
+                    </div>
+                </div>
+
+                <!-- Charts Side -->
+                <div class="w-full lg:w-2/3 p-6 md:p-8 bg-white grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Chart 1: Radar (Qualitative Dimensions) -->
+                    <div class="flex flex-col h-full">
+                        <h3 class="text-sm font-bold text-stone-400 uppercase tracking-wider mb-4 text-center">Dimensions de l'Impact</h3>
+                        <div class="chart-container flex-grow">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Bar (Quantitative Metrics) -->
+                    <div class="flex flex-col h-full">
+                        <h3 class="text-sm font-bold text-stone-400 uppercase tracking-wider mb-4 text-center">Taux de Couverture Estiné (%)</h3>
+                        <div class="chart-container flex-grow">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ROADMAP (Accordion/Steps) -->
+        <!-- Goal: Organize. Visualization: Styled List/Accordion. 
+             Rationale: Provide actionable steps derived from the analysis. -->
+        <section id="roadmap" class="scroll-mt-20">
+            <div class="mb-8 text-center max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-stone-800">Feuille de Route Opérationnelle</h2>
+                <p class="mt-2 text-stone-600">Comment passer de l'intention à l'action ? Voici les 4 étapes clés pour structurer le partenariat local.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-amber-500 hover:shadow-md transition-shadow">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-amber-100 text-amber-700 w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+                        <div>
+                            <h3 class="font-bold text-lg text-stone-800">Diagnostic & Cartographie</h3>
+                            <p class="text-stone-600 mt-2 text-sm leading-relaxed">
+                                Avant d'agir, identifiez l'existant. Qui fait quoi ? Où sont les zones blanches ?
+                            </p>
+                            <ul class="mt-3 space-y-1 text-sm text-stone-500">
+                                <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> Recenser les EPN, Biblio, associations.</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> Identifier les compétences de chacun.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-500 hover:shadow-md transition-shadow">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-teal-100 text-teal-700 w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+                        <div>
+                            <h3 class="font-bold text-lg text-stone-800">Formalisation Souple</h3>
+                            <p class="text-stone-600 mt-2 text-sm leading-relaxed">
+                                Créer un cadre de confiance sans lourdeur administrative excessive.
+                            </p>
+                            <ul class="mt-3 space-y-1 text-sm text-stone-500">
+                                <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> Charte de partenariat locale.</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> Définir un référent par structure.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-indigo-500 hover:shadow-md transition-shadow">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-indigo-100 text-indigo-700 w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+                        <div>
+                            <h3 class="font-bold text-lg text-stone-800">Outils de Référencement (Fléchage)</h3>
+                            <p class="text-stone-600 mt-2 text-sm leading-relaxed">
+                                S'assurer que l'usager est dirigé vers la bonne porte (The "Right Door" policy).
+                            </p>
+                            <ul class="mt-3 space-y-1 text-sm text-stone-500">
+                                <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> Fiches d'orientation partagées.</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> Système de ticket ou contact direct.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-rose-500 hover:shadow-md transition-shadow">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-rose-100 text-rose-700 w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">4</div>
+                        <div>
+                            <h3 class="font-bold text-lg text-stone-800">Animation & Formation</h3>
+                            <p class="text-stone-600 mt-2 text-sm leading-relaxed">
+                                Le réseau doit vivre. Il faut former les travailleurs sociaux au numérique et les animateurs EPN au social.
+                            </p>
+                            <ul class="mt-3 space-y-1 text-sm text-stone-500">
+                                <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> Journées d'échange de pratiques.</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> Formations croisées.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Table (Goal: Compare) -->
+        <section class="bg-white rounded-xl shadow-sm overflow-hidden border border-stone-200">
+            <div class="p-6 bg-stone-50 border-b border-stone-200">
+                <h3 class="text-lg font-bold text-stone-800">Approche Isolée vs. Approche Maillée</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-stone-200 text-sm">
+                    <thead class="bg-stone-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left font-medium text-stone-500 uppercase tracking-wider">Critère</th>
+                            <th scope="col" class="px-6 py-3 text-left font-medium text-stone-500 uppercase tracking-wider">Sans Partenariat</th>
+                            <th scope="col" class="px-6 py-3 text-left font-bold text-teal-700 uppercase tracking-wider bg-teal-50">Avec Maillage Serré</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-stone-200">
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-stone-900">Parcours Usager</td>
+                            <td class="px-6 py-4 text-stone-500">Fragmenté, "balle de ping-pong", abandon fréquent.</td>
+                            <td class="px-6 py-4 text-stone-700 bg-teal-50/30">Fluide, accompagné, continuité de service.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-stone-900">Utilisation des Ressources</td>
+                            <td class="px-6 py-4 text-stone-500">Doublons, matériel sous-utilisé.</td>
+                            <td class="px-6 py-4 text-stone-700 bg-teal-50/30">Mutualisation (locaux, pc), complémentarité.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-stone-900">Compétences Pro</td>
+                            <td class="px-6 py-4 text-stone-500">Silos (Social vs Technique).</td>
+                            <td class="px-6 py-4 text-stone-700 bg-teal-50/30">Hybridation (Travailleur social numérique).</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-stone-900">Visibilité</td>
+                            <td class="px-6 py-4 text-stone-500">Faible, dépend du bouche-à-oreille local.</td>
+                            <td class="px-6 py-4 text-stone-700 bg-teal-50/30">Forte, communication unifiée territoriale.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-white text-xl font-bold mb-4">Ensemble pour l'inclusion numérique</h2>
+            <p class="max-w-xl mx-auto mb-8 text-sm">
+                Cette interface est un outil de synthèse pour aider les coordinateurs locaux à visualiser l'importance du travail en réseau.
+            </p>
+            <div class="border-t border-stone-800 pt-8 text-xs">
+                &copy; 2024 MaillageLocal.be - Outil de démonstration pédagogique.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- DATA STORAGE ---
+        // Store base data for text snippets and logic
+        const actorData = {
+            epn: {
+                title: "EPN (Espace Public Numérique)",
+                desc: "Structure disposant d'équipements informatiques et d'une connexion internet, proposant un accompagnement qualifié.",
+                audience: "Tout public, demandeurs d'emploi, seniors, jeunes.",
+                assets: [
+                    "Parc informatique (PC, Tablettes)",
+                    "Expertise technique et pédagogique",
+                    "Ateliers de formation structurés"
+                ],
+                needs: [
+                    "Capter les publics les plus éloignés (souvent invisibles)",
+                    "Mieux connaître les aides sociales disponibles",
+                    "Reconnaissance institutionnelle"
+                ]
+            },
+            biblio: {
+                title: "Bibliothèque Publique",
+                desc: "Lieu d'accès à la culture et à l'information, souvent le premier point d'entrée gratuit et inconditionnel.",
+                audience: "Lecteurs, étudiants, familles, chercheurs d'info.",
+                assets: [
+                    "Lieu neutre, non stigmatisant",
+                    "Ressources documentaires",
+                    "Maillage fin du territoire (proximité)"
+                ],
+                needs: [
+                    "Support technique pour les usagers numériques",
+                    "Formation du personnel à l'e-administration",
+                    "Partenaires pour ateliers spécialisés"
+                ]
+            },
+            cpas: {
+                title: "CPAS (Action Sociale)",
+                desc: "Centre Public d'Action Sociale garantissant l'aide sociale et accompagnant les personnes fragilisées.",
+                audience: "Personnes en précarité, bénéficiaires du RIS.",
+                assets: [
+                    "Connaissance intime des publics fragiles",
+                    "Leviers d'incitation (activation sociale)",
+                    "Vision globale des freins (logement, santé...)"
+                ],
+                needs: [
+                    "Délester les assistants sociaux des tâches tech",
+                    "Lieux d'orientation fiables pour les bénéficiaires",
+                    "Outils de détection de la fragilité numérique"
+                ]
+            },
+            liens: {
+                title: "Lieux de Liens & Tiers-Lieux",
+                desc: "Espaces hybrides (cafés sociaux, maisons de quartier) favorisant la rencontre et la convivialité.",
+                audience: "Voisins, isolés, citoyens engagés.",
+                assets: [
+                    "Atmosphère de confiance (le 'café')",
+                    "Approche par les pairs (entraide)",
+                    "Souplesse horaire et d'accès"
+                ],
+                needs: [
+                    "Matériel performant",
+                    "Cadre méthodologique",
+                    "Connexion aux services officiels"
+                ]
+            }
+        };
+
+        // --- INTERACTION HANDLING ---
+
+        // 1. Actor Selection Logic
+        function selectActor(key) {
+            // UI Reset
+            ['epn', 'biblio', 'cpas', 'liens'].forEach(id => {
+                document.getElementById(`card-${id}`).classList.remove('border-amber-500', 'border-teal-500', 'border-rose-500', 'border-indigo-500', 'ring-2', 'ring-offset-2');
+                document.getElementById(`card-${id}`).classList.add('border-transparent');
+            });
+
+            // Highlight selected
+            const card = document.getElementById(`card-${key}`);
+            card.classList.remove('border-transparent');
+            
+            // Apply specific color border based on type
+            if(key === 'epn') card.classList.add('border-amber-500', 'ring-2', 'ring-amber-100', 'ring-offset-2');
+            if(key === 'biblio') card.classList.add('border-teal-500', 'ring-2', 'ring-teal-100', 'ring-offset-2');
+            if(key === 'cpas') card.classList.add('border-rose-500', 'ring-2', 'ring-rose-100', 'ring-offset-2');
+            if(key === 'liens') card.classList.add('border-indigo-500', 'ring-2', 'ring-indigo-100', 'ring-offset-2');
+
+            // Populate Panel
+            const data = actorData[key];
+            const panel = document.getElementById('actor-detail-panel');
+            
+            document.getElementById('detail-title').textContent = data.title;
+            document.getElementById('detail-desc').textContent = data.desc;
+            document.getElementById('detail-audience').textContent = data.audience;
+
+            // Generate Lists
+            const assetsList = document.getElementById('detail-assets');
+            assetsList.innerHTML = '';
+            data.assets.forEach(item => {
+                assetsList.innerHTML += `<li class="flex items-start"><i class="fa-solid fa-check text-teal-500 mt-1 mr-2 flex-shrink-0"></i><span>${item}</span></li>`;
+            });
+
+            const needsList = document.getElementById('detail-needs');
+            needsList.innerHTML = '';
+            data.needs.forEach(item => {
+                needsList.innerHTML += `<li class="flex items-start"><i class="fa-solid fa-arrow-right text-amber-500 mt-1 mr-2 flex-shrink-0"></i><span>${item}</span></li>`;
+            });
+
+            // Show Panel with animation
+            panel.classList.remove('hidden');
+            panel.classList.add('animate-fade-in');
+        }
+
+        // Navigation Scroll
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if(el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- SIMULATOR & CHARTS LOGIC ---
+
+        // Config variables
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        let radarChart, barChart;
+
+        // Init Charts
+        function initCharts() {
+            // 1. Radar Chart (Dimensions of Impact)
+            radarChart = new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Accessibilité', 'Compétences', 'Confiance', 'Maillage Social', 'Efficacité'],
+                    datasets: [{
+                        label: 'Impact Projeté',
+                        data: [40, 30, 50, 20, 30], // Initial low values
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)', // Amber-600
+                        borderColor: 'rgba(217, 119, 6, 1)',
+                        pointBackgroundColor: 'rgba(217, 119, 6, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            ticks: { display: false },
+                            grid: { color: '#e7e5e4' },
+                            pointLabels: {
+                                font: { size: 12, family: 'Segoe UI' },
+                                color: '#57534e'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // 2. Bar Chart (Quantitative Outcome)
+            barChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Publics Touchés', 'Résolution Problèmes', 'Satisfaction Usagers'],
+                    datasets: [{
+                        label: 'Performance Actuelle',
+                        data: [35, 40, 55],
+                        backgroundColor: [
+                            'rgba(13, 148, 136, 0.7)', // Teal
+                            'rgba(13, 148, 136, 0.7)',
+                            'rgba(13, 148, 136, 0.7)'
+                        ],
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { borderDash: [2, 4], color: '#f5f5f4' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Update Logic
+        function updateSimulator() {
+            // Get values (1-5)
+            const vCoord = parseInt(document.getElementById('input-coord').value);
+            const vTools = parseInt(document.getElementById('input-tools').value);
+            const vAction = parseInt(document.getElementById('input-action').value);
+
+            // Update Labels
+            const labelsMap = {
+                1: "Faible/Nul", 2: "Occasionnel", 3: "Régulier", 4: "Fort", 5: "Systémique"
+            };
+            document.getElementById('val-coord').textContent = labelsMap[vCoord];
+            document.getElementById('val-tools').textContent = labelsMap[vTools];
+            document.getElementById('val-action').textContent = labelsMap[vAction];
+
+            // Calculate Scores (Algorithm)
+            // Coordination boosts Efficiency and Trust
+            // Tools boost Accessibility and Efficiency
+            // Actions boost Skills and Social Mesh
+            
+            const totalScore = vCoord + vTools + vAction; // Max 15
+            
+            // Radar Data Calculation
+            const dAccess = (vTools * 12) + (vAction * 8); 
+            const dSkills = (vAction * 15) + (vCoord * 5);
+            const dTrust = (vCoord * 10) + (vAction * 10);
+            const dSocial = (vAction * 12) + (vCoord * 8);
+            const dEff = (vTools * 10) + (vCoord * 10);
+
+            // Update Radar
+            radarChart.data.datasets[0].data = [dAccess, dSkills, dTrust, dSocial, dEff];
+            radarChart.update();
+
+            // Bar Data Calculation
+            const pReach = Math.min(100, (totalScore / 15) * 95 + 10); // Base 10, max 100ish
+            const pSolve = Math.min(100, (vTools * 10 + vCoord * 10));
+            const pSat = Math.min(100, (vAction * 10 + vCoord * 5 + 30));
+
+            // Update Bar
+            barChart.data.datasets[0].data = [pReach, pSolve, pSat];
+            
+            // Color Shift based on score
+            if(totalScore > 10) {
+                barChart.data.datasets[0].backgroundColor = 'rgba(13, 148, 136, 0.8)'; // Teal (Good)
+                document.getElementById('mesh-status').textContent = "Maillage Robuste & Performant";
+                document.getElementById('mesh-status').className = "text-lg font-bold text-teal-600";
+                document.getElementById('mesh-advice').textContent = "Excellent ! Votre territoire maximise ses ressources pour le bien des citoyens.";
+            } else if (totalScore > 6) {
+                barChart.data.datasets[0].backgroundColor = 'rgba(217, 119, 6, 0.8)'; // Amber (Med)
+                document.getElementById('mesh-status').textContent = "Collaboration en Construction";
+                document.getElementById('mesh-status').className = "text-lg font-bold text-amber-600";
+                document.getElementById('mesh-advice').textContent = "Bon début. Essayez de formaliser davantage les outils communs pour gagner en efficacité.";
+            } else {
+                barChart.data.datasets[0].backgroundColor = 'rgba(120, 113, 108, 0.8)'; // Stone (Low)
+                document.getElementById('mesh-status').textContent = "Actions Fragmentées";
+                document.getElementById('mesh-status').className = "text-lg font-bold text-stone-500";
+                document.getElementById('mesh-advice').textContent = "Les acteurs travaillent en silo. L'impact est limité. Augmentez la coordination.";
+            }
+            barChart.update();
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            
+            // Bind inputs
+            ['input-coord', 'input-tools', 'input-action'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updateSimulator);
+            });
+
+            // Initial calculation
+            updateSimulator();
+
+            // Open first card by default
+            selectActor('epn');
+        });
+
+    </script>
+
+    <!-- Animation Keyframes inserted via JS if needed, or simple Tailwind animation classes -->
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+    
+    <!-- CONFIRMATION: NO SVG graphics used (using FontAwesome webfonts and Canvas). NO Mermaid JS used. -->
+</body>
+</html>
